@@ -1,3 +1,5 @@
-<div>
-    <app-pencil></app-pencil>
+<div class="select-pencil">
+    @for (pencil of pencils; track $index) {
+    <app-pencil [id]="$index" [namePencil]="pencil"></app-pencil>
+    }
 </div>

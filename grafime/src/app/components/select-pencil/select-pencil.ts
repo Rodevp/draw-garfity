@@ -7,4 +7,13 @@ import { PencilComponent } from "../pencil/pencil";
     styleUrls: ['./select-pencil.css'],
     imports: [PencilComponent]
 })
-export class SelectPencilComponent { }
+export class SelectPencilComponent {
+    pencils = [
+        "Pencil",
+        "Chisel",
+        "Spray",
+        "SprayRafash",
+        "Acrilyc",
+        "Eraser"
+    ]
+}
