@@ -46,13 +46,33 @@ export class BoardComponent implements OnInit, OnDestroy {
     }
 
     draw = (event: PointerEvent) => {
+
         if (!this.drawing) return;
 
-        this.ctx.lineTo(event.offsetX, event.offsetY);
-        this.ctx.stroke();
+        const point = this.getCanvasCoordinates(event, this.canvas);
+        const speed = this.lastPoint
+            ? Math.hypot(point.x - this.lastPoint.x, point.y - this.lastPoint.y)
+            : 0;
+
+        this.engine.brush(this.currentBrush, {
+            ctx: this.ctx,
+            color: this.currentColor,
+            width: this.currentSize,
+            lastPoint: this.lastPoint,
+            point: point,
+            pressure: event.pressure || 0.5,
+            speed: speed
+        });
+
+        if (this.currentStroke) this.currentStroke.points.push(point);
+
+        this.lastPoint = point;
+
     };
 
     startDraw = (event: PointerEvent) => {
+
+        this.drawing = true;
         const startPoint = this.getCanvasCoordinates(event, this.canvas)
         this.lastPoint = startPoint
 
@@ -70,6 +90,13 @@ export class BoardComponent implements OnInit, OnDestroy {
 
     stopDraw = () => {
         this.drawing = false;
+
+        if (this.currentStroke) {
+            this.strokes.push(this.currentStroke);
+            this.currentStroke = null;
+        }
+
+        this.lastPoint = null;
         this.ctx.closePath();
     };
 
