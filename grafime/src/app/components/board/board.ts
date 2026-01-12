@@ -100,21 +100,52 @@ export class BoardComponent implements OnInit, OnDestroy {
         this.ctx.closePath();
     };
 
+    reDraw = () => {
+        if (!this.canvas || this.ctx) return;
+
+        const ctx: CanvasRenderingContext2D = this.ctx;
+        const canvas: HTMLCanvasElement = this.canvas;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (let i = 0; i < this.strokes.length; i++) {
+            this.engine.brush(this.strokes[i].brush, {
+                ctx: ctx,
+                color: this.strokes[i].color,
+                width: this.strokes[i].width,
+                lastPoint: this.strokes[i].points[i - 1],
+                point: this.strokes[i].points[i],
+                pressure: 0.5,
+                speed: 0
+            })
+        }
+
+    }
+
+    undo = () => {
+        this.strokes.pop();
+        this.reDraw();
+    }
+
+    handleKeyDown = (e: KeyboardEvent) => {
+        if (e.code !== "KeyZ") return;
+
+        if (e.ctrlKey || e.metaKey) {
+            e.preventDefault();
+            this.undo();
+        }
+    }
+
     ngOnInit(): void {
         this.canvas = document.getElementById('canvas') as HTMLCanvasElement;
         this.ctx = this.setupCanvas(this.canvas);
-
-        this.ctx.strokeStyle = 'black';
-        this.ctx.lineWidth = 2;
-        this.ctx.lineCap = 'round';
-        this.ctx.lineJoin = 'round';
-
-        console.log(this.ctx);
 
         this.canvas.addEventListener('pointerdown', this.startDraw);
         this.canvas.addEventListener('pointermove', this.draw);
         this.canvas.addEventListener('pointerup', this.stopDraw);
         this.canvas.addEventListener('pointerleave', this.stopDraw);
+
+        window.addEventListener('keydown', this.handleKeyDown);
 
     }
 
@@ -123,6 +154,8 @@ export class BoardComponent implements OnInit, OnDestroy {
         this.canvas.removeEventListener('pointermove', this.draw);
         this.canvas.removeEventListener('pointerup', this.stopDraw);
         this.canvas.removeEventListener('pointerleave', this.stopDraw);
+
+        window.removeEventListener('keydown', this.handleKeyDown);
     }
 
 }
