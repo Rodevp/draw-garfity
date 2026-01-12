@@ -4,8 +4,18 @@
 }
 
 .section__options {
+    display: flex;
     width: 90%;
+    gap: 10px;
     margin: 0 auto;
-    padding: 1rem;
+}
+
+.section__options__tools {
+    width: 25%;
+    background-color: #fff;
+}
+
+.section__options__canvas {
+    width: 100%;
     background-color: #fff;
 }

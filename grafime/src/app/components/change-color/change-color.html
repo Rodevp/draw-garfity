@@ -1,14 +1,14 @@
-<div>
-    <div>
+<div class="change-color">
+    <div class="change-color__input">
         <p>Color</p>
         <div>
             <input type="color">
             <input type="text" placeholder="#000000">
         </div>
     </div>
-    <div>
+    <div class="change-color__presets">
         @for (color of colorPresets; track $index) {
-        <div [style.background-color]="color" style="width: 20px; height: 20px;"></div>
+        <div [style.background-color]="color"></div>
         }
     </div>
 </div>
