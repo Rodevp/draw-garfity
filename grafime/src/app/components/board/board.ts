@@ -101,24 +101,26 @@ export class BoardComponent implements OnInit, OnDestroy {
     };
 
     reDraw = () => {
-        if (!this.canvas || this.ctx) return;
+        if (!this.canvas || !this.ctx) return;
 
         const ctx: CanvasRenderingContext2D = this.ctx;
         const canvas: HTMLCanvasElement = this.canvas;
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        for (let i = 0; i < this.strokes.length; i++) {
-            this.engine.brush(this.strokes[i].brush, {
-                ctx: ctx,
-                color: this.strokes[i].color,
-                width: this.strokes[i].width,
-                lastPoint: this.strokes[i].points[i - 1],
-                point: this.strokes[i].points[i],
-                pressure: 0.5,
-                speed: 0
-            })
-        }
+        this.strokes.forEach(strokes => {
+            for (let i = 0; i < strokes.points.length; i++) {
+                this.engine.brush(strokes.brush, {
+                    ctx: ctx,
+                    color: strokes.color,
+                    width: strokes.width,
+                    lastPoint: strokes.points[i - 1],
+                    point: strokes.points[i],
+                    pressure: 0.5,
+                    speed: 0
+                })
+            }
+        })
 
     }
 
