@@ -1,0 +1,11 @@
+.container {
+    height: 100vh;
+    background-color: #f9f9f1;
+}
+
+.section__options {
+    width: 90%;
+    margin: 0 auto;
+    padding: 1rem;
+    background-color: #fff;
+}
