@@ -11,7 +11,6 @@ import { BrushInput } from "../types";
     providedIn: 'root'
 })
 export class Engine {
-    constructor() { }
 
     private _brushes = {
         "acrilyc": acrylicBrush,

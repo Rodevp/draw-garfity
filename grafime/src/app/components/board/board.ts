@@ -128,9 +128,11 @@ export class BoardComponent implements OnInit, OnDestroy {
     }
 
     handleKeyDown = (e: KeyboardEvent) => {
+
         if (e.code !== "KeyZ") return;
 
         if (e.ctrlKey || e.metaKey) {
+            alert(e.code);
             e.preventDefault();
             this.undo();
         }
