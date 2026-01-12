@@ -1,0 +1,15 @@
+.change-width {
+    width: 100%;
+    padding: 0 1rem;
+}
+
+.change-width div {
+    display: flex;
+    margin-bottom: 5px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.change-width input {
+    width: 100%;
+}
