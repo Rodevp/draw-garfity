@@ -1,5 +1,5 @@
 
-type Brush = "Pencil" | "Eraser" | "Acrilyc" | "Spray" | "SprayRafash" | "Chisel"
+type Brush = "pencil" | "eraser" | "acrylic" | "spray" | "spray-rafash" | "chisel"
 
 type Point = { x: number; y: number }
 
