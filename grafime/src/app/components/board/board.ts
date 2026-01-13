@@ -24,21 +24,24 @@ export class BoardComponent implements OnInit, OnDestroy {
 
         const rect = canvas.getBoundingClientRect();
 
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+
         return {
-            x: (e.clientX - rect.left),
-            y: (e.clientY - rect.top),
+            x: (e.clientX - rect.left) * scaleX,
+            y: (e.clientY - rect.top) * scaleY,
         }
     }
 
     setupCanvas = (canvas: HTMLCanvasElement) => {
         const ctx = canvas.getContext("2d", { desynchronized: true })!;
-        const dpr = window.devicePixelRatio;
+        const dpr = window.devicePixelRatio || 1;
         const rect = canvas.getBoundingClientRect();
 
         canvas.width = rect.width * dpr;
         canvas.height = rect.height * dpr;
 
-        ctx.scale(dpr, dpr);
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
 
         return ctx;
 
@@ -48,32 +51,38 @@ export class BoardComponent implements OnInit, OnDestroy {
 
         if (!this.drawing) return;
 
-        const point = this.getCanvasCoordinates(event, this.canvas);
-        const speed = this.lastPoint
-            ? Math.hypot(point.x - this.lastPoint.x, point.y - this.lastPoint.y)
-            : 0;
+        const events = event.getCoalescedEvents?.() ?? [event];
 
-        this.engine.brush(this.toolStore.brush(), {
-            ctx: this.ctx,
-            color: this.toolStore.color(),
-            width: this.toolStore.size(),
-            lastPoint: this.lastPoint,
-            point: point,
-            pressure: event.pressure || 0.5,
-            speed: speed
-        });
+        for (const e of events) {
+            const point = this.getCanvasCoordinates(e, this.canvas);
+            const speed = this.lastPoint
+                ? Math.hypot(point.x - this.lastPoint.x, point.y - this.lastPoint.y)
+                : 0;
 
-        if (this.currentStroke) this.currentStroke.points.push(point);
+            this.engine.brush(this.toolStore.brush(), {
+                ctx: this.ctx,
+                color: this.toolStore.color(),
+                width: this.toolStore.size(),
+                lastPoint: this.lastPoint,
+                point: point,
+                pressure: e.pressure || 0.5,
+                speed: speed
+            });
 
-        this.lastPoint = point;
+            if (this.currentStroke) this.currentStroke.points.push(point);
+
+            this.lastPoint = point;
+        }
 
     };
 
     startDraw = (event: PointerEvent) => {
 
+        const startPoint = this.getCanvasCoordinates(event, this.canvas);
+
+        this.canvas.setPointerCapture(event.pointerId);
         this.drawing = true;
-        const startPoint = this.getCanvasCoordinates(event, this.canvas)
-        this.lastPoint = startPoint
+        this.lastPoint = startPoint;
 
         this.currentStroke = {
             color: this.toolStore.color(),
@@ -82,13 +91,21 @@ export class BoardComponent implements OnInit, OnDestroy {
             brush: this.toolStore.brush()
         }
 
-        this.ctx.beginPath();
-        this.ctx.moveTo(startPoint.x, startPoint.y);
+        this.engine.brush(this.toolStore.brush(), {
+            ctx: this.ctx,
+            color: this.toolStore.color(),
+            width: this.toolStore.size(),
+            lastPoint: startPoint,
+            point: startPoint,
+            pressure: event.pressure || 0.5,
+            speed: 0
+        });
 
     };
 
-    stopDraw = () => {
+    stopDraw = (event: PointerEvent) => {
         this.drawing = false;
+        this.canvas.releasePointerCapture(event.pointerId);
 
         if (this.currentStroke) {
             this.strokes.push(this.currentStroke);
@@ -102,15 +119,16 @@ export class BoardComponent implements OnInit, OnDestroy {
     reDraw = () => {
         if (!this.canvas || !this.ctx) return;
 
-        const ctx: CanvasRenderingContext2D = this.ctx;
-        const canvas: HTMLCanvasElement = this.canvas;
+        const rect = this.canvas.getBoundingClientRect();
+        this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+        this.ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
 
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        this.ctx.clearRect(0, 0, rect.width, rect.height);
 
         this.strokes.forEach(strokes => {
             for (let i = 0; i < strokes.points.length; i++) {
                 this.engine.brush(strokes.brush, {
-                    ctx: ctx,
+                    ctx: this.ctx,
                     color: strokes.color,
                     width: strokes.width,
                     lastPoint: strokes.points[i - 1],
