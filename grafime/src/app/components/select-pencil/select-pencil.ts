@@ -1,5 +1,7 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { PencilComponent } from "../pencil/pencil";
+import { ToolStore } from "../../store/tool.store";
+import { Brush } from "../../types";
 
 @Component({
     selector: 'app-select-pencil',
@@ -12,8 +14,15 @@ export class SelectPencilComponent {
         "Pencil",
         "Chisel",
         "Spray",
-        "SprayRafash",
+        "Spray-Rafash",
         "Acrilyc",
         "Eraser"
     ]
+
+    toolStore = inject(ToolStore);
+
+    selectPencil(pencil: string) {
+        this.toolStore.setBrush(pencil.toLocaleLowerCase() as Brush);
+    }
+
 }

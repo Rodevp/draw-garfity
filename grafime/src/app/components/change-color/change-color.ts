@@ -1,4 +1,5 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
+import { ToolStore } from "../../store/tool.store";
 
 @Component({
     selector: 'app-change-color',
@@ -17,6 +18,8 @@ export class ChangeColorComponent {
         "#BB8FCE",
         "#85C1E2",
         "#52B788",
-    ]
+    ];
+
+    toolStore = inject(ToolStore);
 }
 

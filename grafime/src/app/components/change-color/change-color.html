@@ -2,13 +2,13 @@
     <div class="change-color__input">
         <p>Color</p>
         <div>
-            <input type="color">
-            <input type="text" placeholder="#000000">
+            <input type="color" (input)="toolStore.setColor($event.target.value)">
+            <input type="text" placeholder={{toolStore.color()}} (input)="toolStore.setColor($event.target.value)">
         </div>
     </div>
     <div class="change-color__presets">
         @for (color of colorPresets; track $index) {
-        <div [style.background-color]="color"></div>
+        <div [style.background-color]="color" (click)="toolStore.setColor(color)"></div>
         }
     </div>
 </div>

@@ -6,7 +6,7 @@ import { Brush } from "../types";
 })
 export class ToolStore {
     color = signal<string>("#000000");
-    size = signal<number>(1);
+    size = signal<number>(5);
     brush = signal<Brush>("pencil");
 
     setColor(color: string) {
