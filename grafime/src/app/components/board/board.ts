@@ -141,6 +141,8 @@ export class BoardComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.canvas = document.getElementById('canvas') as HTMLCanvasElement;
         this.ctx = this.setupCanvas(this.canvas);
+        this.toolStore.setCtx(this.ctx);
+        this.toolStore.setCanvas(this.canvas);
 
         this.canvas.addEventListener('pointerdown', this.startDraw);
         this.canvas.addEventListener('pointermove', this.draw);

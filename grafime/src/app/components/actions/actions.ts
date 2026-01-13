@@ -1,5 +1,6 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { ActionButtonComponent } from "../button-actions/action-button";
+import { ToolStore } from "../../store/tool.store";
 
 @Component({
     selector: 'app-actions',
@@ -7,4 +8,23 @@ import { ActionButtonComponent } from "../button-actions/action-button";
     styleUrls: ['./actions.css'],
     imports: [ActionButtonComponent]
 })
-export class ActionsComponent { }
+export class ActionsComponent {
+
+    toolStore = inject(ToolStore);
+
+    clear() {
+        if (!this.toolStore.ctx() || !this.toolStore.canvas()) return;
+        this.toolStore.ctx().clearRect(0, 0, this.toolStore.canvas().width, this.toolStore.canvas().height);
+    }
+
+    download() {
+        if (!this.toolStore.canvas()) return;
+        const url = this.toolStore.canvas().toDataURL('image/png');
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'draw-grafi.png';
+        link.click();
+    }
+
+
+}

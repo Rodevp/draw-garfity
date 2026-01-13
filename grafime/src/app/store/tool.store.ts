@@ -8,6 +8,8 @@ export class ToolStore {
     color = signal<string>("#000000");
     size = signal<number>(5);
     brush = signal<Brush>("pencil");
+    canvas = signal<HTMLCanvasElement>(null!);
+    ctx = signal<CanvasRenderingContext2D>(null!);
 
     setColor(color: string) {
         this.color.set(color);
@@ -21,4 +23,12 @@ export class ToolStore {
         this.brush.set(brush);
     }
 
-}
+    setCtx(ctx: CanvasRenderingContext2D) {
+        this.ctx.set(ctx);
+    }
+
+    setCanvas(canvas: HTMLCanvasElement) {
+        this.canvas.set(canvas);
+    }
+
+}   
