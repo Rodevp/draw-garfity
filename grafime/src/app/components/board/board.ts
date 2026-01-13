@@ -1,6 +1,7 @@
 import { Component, inject, OnDestroy, OnInit } from "@angular/core";
-import { Brush, Stroke } from "../../types";
+import { Stroke } from "../../types";
 import { Engine } from "../../services/engine";
+import { ToolStore } from "../../store/tool.store";
 
 @Component({
     selector: 'app-board',
@@ -15,11 +16,9 @@ export class BoardComponent implements OnInit, OnDestroy {
     private strokes: Stroke[] = [];
     private currentStroke: Stroke | null = null;
     private lastPoint: { x: number; y: number } | null = null;
-    private currentColor = 'black'; // deben ser signal en un store
-    private currentSize = 2; // deben ser signal en un store
-    private currentBrush: Brush = "pencil" // deben ser signal en un store
 
     engine = inject(Engine);
+    toolStore = inject(ToolStore);
 
     getCanvasCoordinates = (e: PointerEvent, canvas: HTMLCanvasElement) => {
 
@@ -54,10 +53,10 @@ export class BoardComponent implements OnInit, OnDestroy {
             ? Math.hypot(point.x - this.lastPoint.x, point.y - this.lastPoint.y)
             : 0;
 
-        this.engine.brush(this.currentBrush, {
+        this.engine.brush(this.toolStore.brush(), {
             ctx: this.ctx,
-            color: this.currentColor,
-            width: this.currentSize,
+            color: this.toolStore.color(),
+            width: this.toolStore.size(),
             lastPoint: this.lastPoint,
             point: point,
             pressure: event.pressure || 0.5,
@@ -77,10 +76,10 @@ export class BoardComponent implements OnInit, OnDestroy {
         this.lastPoint = startPoint
 
         this.currentStroke = {
-            color: this.currentColor,
-            width: this.currentSize,
+            color: this.toolStore.color(),
+            width: this.toolStore.size(),
             points: [startPoint],
-            brush: this.currentBrush
+            brush: this.toolStore.brush()
         }
 
         this.ctx.beginPath();
