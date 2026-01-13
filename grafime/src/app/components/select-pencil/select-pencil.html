@@ -1,5 +1,6 @@
 <div class="select-pencil">
     @for (pencil of pencils; track $index) {
-    <app-pencil [id]="$index" [namePencil]="pencil" (click)="selectPencil(pencil)"></app-pencil>
+    <app-pencil [id]="$index" [namePencil]="pencil" [selectedPencil]="selectedPencil()"
+        (click)="selectPencil(pencil)" />
     }
 </div>

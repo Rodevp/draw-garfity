@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import { PencilComponent } from "../pencil/pencil";
 import { ToolStore } from "../../store/tool.store";
 import { Brush } from "../../types";
@@ -17,11 +17,13 @@ export class SelectPencilComponent {
         "Spray-Rafash",
         "Acrilyc",
         "Eraser"
-    ]
+    ];
+    selectedPencil = signal<string>("Pencil");
 
     toolStore = inject(ToolStore);
 
     selectPencil(pencil: string) {
+        this.selectedPencil.set(pencil);
         this.toolStore.setBrush(pencil.toLowerCase() as Brush);
     }
 

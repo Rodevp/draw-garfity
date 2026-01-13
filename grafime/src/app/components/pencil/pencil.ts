@@ -7,4 +7,5 @@ import { Component, input } from "@angular/core";
 })
 export class PencilComponent {
     namePencil = input<string>();
+    selectedPencil = input<string>();
 }
