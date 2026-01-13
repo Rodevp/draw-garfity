@@ -22,7 +22,7 @@ export class SelectPencilComponent {
     toolStore = inject(ToolStore);
 
     selectPencil(pencil: string) {
-        this.toolStore.setBrush(pencil.toLocaleLowerCase() as Brush);
+        this.toolStore.setBrush(pencil.toLowerCase() as Brush);
     }
 
 }
