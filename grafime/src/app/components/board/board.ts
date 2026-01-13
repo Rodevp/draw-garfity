@@ -15,9 +15,9 @@ export class BoardComponent implements OnInit, OnDestroy {
     private strokes: Stroke[] = [];
     private currentStroke: Stroke | null = null;
     private lastPoint: { x: number; y: number } | null = null;
-    private currentColor = 'black';
-    private currentSize = 2;
-    private currentBrush: Brush = "pencil"
+    private currentColor = 'black'; // deben ser signal en un store
+    private currentSize = 2; // deben ser signal en un store
+    private currentBrush: Brush = "pencil" // deben ser signal en un store
 
     engine = inject(Engine);
 
@@ -134,7 +134,6 @@ export class BoardComponent implements OnInit, OnDestroy {
         if (e.code !== "KeyZ") return;
 
         if (e.ctrlKey || e.metaKey) {
-            alert(e.code);
             e.preventDefault();
             this.undo();
         }
