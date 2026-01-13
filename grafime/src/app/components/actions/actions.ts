@@ -19,6 +19,13 @@ export class ActionsComponent {
 
     download() {
         if (!this.toolStore.canvas()) return;
+
+        this.toolStore.ctx().save();
+        this.toolStore.ctx().globalCompositeOperation = 'destination-over';
+        this.toolStore.ctx().fillStyle = '#ffffff';
+        this.toolStore.ctx().fillRect(0, 0, this.toolStore.canvas().width, this.toolStore.canvas().height);
+        this.toolStore.ctx().restore();
+
         const url = this.toolStore.canvas().toDataURL('image/png');
         const link = document.createElement('a');
         link.href = url;
